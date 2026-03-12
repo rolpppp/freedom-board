@@ -1,4 +1,7 @@
-<?php $filename = 'messages.csv'; ?>
+<?php 
+session_start();
+require 'db.php';
+?>
 
 
 <!DOCTYPE html>
@@ -21,39 +24,45 @@
 				poster must be available via $_POST["name"] and
 				$_POST["message"] at the server side.
 	-->
-    <form action="post_message.php" method=post>
-        <input type="text" name="name" placeholder="Your Name" required ><br><br>
-        <textarea name="message" placeholder="Write a message..." required ></textarea><br><br>
-        <button type="submit">Post to Board</button>
-    </form>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <form action="post.php" method="POST">
+            <textarea name="content" placeholder="Write a message..." required></textarea><br><br>
+            <button type="submit">Post to Board</button>
+        </form>
+    <?php else: ?>
+        <p><a href="login.php">Login</a> or <a href="register.php">Register</a> to post.</p>
+    <?php endif; ?>
 
     <hr>
     <h2>Recent Messages</h2>
     <?php
-    if (file_exists($filename)) {
-        $file = fopen($filename, 'r');
-        $rows = [];
-        // added parameters such as delimiters to avoid display of error on the website
-        while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== FALSE) {
-            $rows[] = $row;
-        }
-        fclose($file);
-        // sort rows by timestamp (newest first)
-        // takes an array and a user-defined "anonymous" comparison function
-        usort($rows, function($a, $b) {
-            return strtotime($b[2]) - strtotime($a[2]);
-        });
-        // Loop through each row of the CSV to display it (newest first)
-        foreach ($rows as $row) {
-            // $row[0] = Name, $row[1] = Message, $row[2] = Timestamp
-            echo "<div class='post'>";
-            echo "<strong>" . htmlspecialchars($row[0]) . "</strong>: " . htmlspecialchars($row[1]);
-            echo "<div class='meta'>Posted on: " . $row[2] . "</div>";
-            echo "</div>";
-        }
-    } else {
-        echo "<p>No messages yet. Be the first to post!</p>";
-    }
-    ?>
+    $stmt = $pdo->query(
+        "SELECT posts.id, posts.content, posts.time_posted, posts.user_id,
+                users.username
+         FROM posts
+         JOIN users ON posts.user_id = users.id
+         ORDER BY posts.time_posted ASC"
+    );
+    $posts = $stmt->fetchAll();
+
+    if (count($posts) > 0):
+        foreach ($posts as $post):
+    ?> 
+        <div class="post">
+                <strong><?= htmlspecialchars($post['username']) ?></strong>:
+                <?= htmlspecialchars($post['content']) ?>
+                <div class="meta">Posted on: <?= $post['time_posted'] ?></div>
+
+                <!-- Delete button — only visible to the post owner -->
+                <?php if (isset($_SESSION['user_id']) && $post['user_id'] == $_SESSION['user_id']): ?>
+                    <a href="delete.php?id=<?= $post['id'] ?>">Delete</a>
+                <?php endif; ?>
+            </div>
+        <?php
+            endforeach;
+        else:
+            echo "<p>No messages yet. Be the first to post!</p>";
+        endif;
+        ?>
 </body>
 </html>
