@@ -8,29 +8,52 @@ require 'db.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>[Your Name]'s Freedom Board</title>
+    <title>Freedom Board</title>
 	<link rel="stylesheet" href="style.css"/>
-
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .navbar a {
+            color: #1976d2;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .user-info {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-    <h1>Freedom Board</h1>
+    <div class="navbar">
+        <h1 style="margin: 0;">Freedom Board</h1>
+        <div>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <span class="user-info">Welcome, <strong><?= htmlspecialchars($_SESSION['username']) ?></strong></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+                <a href="register.php">Register</a>
+            <?php endif; ?>
+        </div>
+    </div>
 
-    <!-- Action points to the processing file -->
-	<!-- Note that when the form gets submitted, the form data
-			is processed by post_message.php.
-	-->
-	<!-- TODO: Task 1 - Ensure that the form is submitted
-				using the POST method. The message and the name of the
-				poster must be available via $_POST["name"] and
-				$_POST["message"] at the server side.
-	-->
     <?php if (isset($_SESSION['user_id'])): ?>
         <form action="post.php" method="POST">
             <textarea name="content" placeholder="Write a message..." required></textarea><br><br>
             <button type="submit">Post to Board</button>
         </form>
     <?php else: ?>
-        <p><a href="login.php">Login</a> or <a href="register.php">Register</a> to post.</p>
+        <p>Please <a href="login.php">login</a> or <a href="register.php">register</a> to post a message.</p>
     <?php endif; ?>
 
     <hr>
