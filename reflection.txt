@@ -1,0 +1,10 @@
+The "Old vs. New" Reflection
+  1. What are the risks of using a .txt file for data storage on a live server?
+      - In .txt files, rules cannot be enforced. A user can easily fake a username since there are no foreign
+        keys or relational constraints verifying their identity.
+  2. What happens to your $_SESSION data when you click a "Logout" script that runs session_destroy()?
+      - When the function is executed, the server permanently deletes the session file stored in the internal 
+        hard drive that corresponds to the user's active session ID. This means that all variables stored in 
+        the $_SESSION superglobal array will be gone. However, the browser may still hold the session ID cookie, 
+        but the next time the browser makes a request to the server, the server will not be able to recognize the ID.
+        This will redirect the user to a logged-out state.

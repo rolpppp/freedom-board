@@ -18,7 +18,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])){
     $user_id = $_SESSION['user_id'];
 
     $stmt = $pdo->prepare(
-        "DELTE FROM posts WHERE id = ? AND user_id = ?"
+        "DELETE FROM posts WHERE id = ? AND user_id = ?"
     );
 
     $stmt->execute([$post_id, $user_id]);
