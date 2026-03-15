@@ -144,5 +144,18 @@ function getReplies($pdo, $parentId) {
             <a href="board.php?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>">Next »</a>
         <?php endif; ?>
     </div>
+
+    <script>
+        const initialMaxId = <?= $pdo->query("SELECT MAX(id) FROM posts")->fetchColumn() ?? 0 ?>;
+        setInterval(() => {
+            fetch('/src/posts/poll.php')
+                .then(r => r.text())
+                .then(latestId => {
+                    if (parseInt(latestId) > initialMaxId) {
+                        location.reload();
+                    }
+                });
+        }, 5000);
+    </script>
 </body>
 </html>
