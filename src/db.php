@@ -3,7 +3,7 @@
 // this file is responsible for managing and connecting the mysql database to this project
 // additionally, a '.env' file is utilized to hide sensitive data
 
-$env = parse_ini_file('.env');
+$env = parse_ini_file(__DIR__ . '/../.env');
 
 $host     = $env['DB_HOST'];
 $db_name  = $env['DB_NAME'];

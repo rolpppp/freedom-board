@@ -2,50 +2,36 @@
 session_start();
 
 // Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
-    header("Location: board.php");
-    exit();
-}
+require 'auth_check.php';
 
-require 'db.php';
+require __DIR__ . '/../db.php';
 
 $error = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
-    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
 
     // Validate inputs
-    if (empty($username) || empty($password) || empty($confirm_password)) {
-        $error = 'All fields are required.';
-    } elseif (strlen($username) < 3) {
-        $error = 'Username must be at least 3 characters long.';
-    } elseif (strlen($password) < 6) {
-        $error = 'Password must be at least 6 characters long.';
-    } elseif ($password !== $confirm_password) {
-        $error = 'Passwords do not match.';
+    if (empty($username) || empty($password)) {
+        $error = 'Username and password are required.';
     } else {
-        // Check if username already exists
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        // Query the database for the user
+        $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = ?");
         $stmt->execute([$username]);
-        
-        if ($stmt->rowCount() > 0) {
-            $error = 'Username already exists. Please choose a different one.';
-        } else {
-            // Hash the password
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $user = $stmt->fetch();
 
-            // Insert user into database
-            try {
-                $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-                $stmt->execute([$username, $password_hash]);
-                
-                $success = 'Registration successful! You can now <a href="login.php">login</a>.';
-            } catch (PDOException $e) {
-                $error = 'An error occurred during registration. Please try again.';
-            }
+        // Verify user exists and password is correct
+        if ($user && password_verify($password, $user['password'])) {
+            // Password is correct, start session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+
+            // Redirect to board
+            header("Location: /src/posts/board.php");
+            exit();
+        } else {
+            $error = 'Invalid username or password.';
         }
     }
 }
@@ -55,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register - Freedom Board</title>
-    <link rel="stylesheet" href="style.css"/>
+    <title>Login - Freedom Board</title>
+    <link rel="stylesheet" href="/public/style.css"/>
     <style>
         .form-container {
             max-width: 400px;
@@ -71,13 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             margin-bottom: 15px;
             background: #ffebee;
-            border-radius: 3px;
-        }
-        .success {
-            color: #2e7d32;
-            padding: 10px;
-            margin-bottom: 15px;
-            background: #e8f5e9;
             border-radius: 3px;
         }
         .form-group {
@@ -109,33 +88,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         button[type="submit"]:hover {
             background: #1565c0;
         }
-        .login-link {
+        .register-link {
             text-align: center;
             margin-top: 15px;
         }
-        .login-link a {
+        .register-link a {
             color: #1976d2;
             text-decoration: none;
         }
-        .login-link a:hover {
+        .register-link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>Register</h1>
+        <h1>Login</h1>
 
         <?php if (!empty($error)): ?>
             <div class="error"><?= $error ?></div>
         <?php endif; ?>
 
-        <?php if (!empty($success)): ?>
-            <div class="success"><?= $success ?></div>
-        <?php endif; ?>
-
-        <?php if (empty($success)): ?>
-        <form method="POST" action="register.php">
+        <form method="POST" action="/src/auth/login.php">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
@@ -146,18 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-            </div>
-
-            <button type="submit">Register</button>
+            <button type="submit">Login</button>
         </form>
 
-        <div class="login-link">
-            Already have an account? <a href="login.php">Login here</a>
+        <div class="register-link">
+            Don't have an account? <a href="/src/auth/register.php">Register here</a>
         </div>
-        <?php endif; ?>
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require __DIR__ . '/../db.php';
 
 // Search Logic
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -49,39 +49,39 @@ function getReplies($pdo, $parentId) {
 <head>
     <meta charset="UTF-8">
     <title>Freedom Board</title>
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="/public/style.css"/>
 </head>
 <body>
     <div class="navbar">
         <h1 style="margin: 0;">Freedom Board</h1>
         <div>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <span class="user-info">Welcome, <strong><?= htmlspecialchars($_SESSION['username']) ?></strong></span>
-                <a href="logout.php">Logout</a>
+                <span class="user-info">Welcome, <strong><?= htmlspecialchars($_SESSION['username'] ?? '') ?></strong></span>
+                <a href="/src/auth/logout.php">Logout</a>
             <?php else: ?>
-                <a href="login.php">Login</a>
-                <a href="register.php">Register</a>
+                <a href="/src/auth/login.php">Login</a>
+                <a href="/src/auth/register.php">Register</a>
             <?php endif; ?>
         </div>
     </div>
 
     <div class="search-container">
-        <form action="board.php" method="GET">
+        <form action="/src/posts/board.php" method="GET">
             <input type="text" name="search" placeholder="Search authors or topics..." value="<?= htmlspecialchars($search) ?>">
             <button type="submit">Search</button>
             <?php if($search): ?>
-                <a href="board.php" style="margin-left: 10px; font-size: 0.9em;">Clear</a>
+                <a href="/src/posts/board.php" style="margin-left: 10px; font-size: 0.9em;">Clear</a>
             <?php endif; ?>
         </form>
     </div>
 
     <?php if (isset($_SESSION['user_id'])): ?>
-        <form action="post.php" method="POST" class="post-form">
+        <form action="/src/posts/actions.php?action=post" method="POST" class="post-form">
             <textarea name="content" placeholder="Write a message..." required></textarea><br>
             <button type="submit">Post to Board</button>
         </form>
     <?php else: ?>
-        <p style="text-align: center; margin: 20px;">Please <a href="login.php">login</a> to post a message.</p>
+        <p style="text-align: center; margin: 20px;">Please <a href="/src/auth/login.php">login</a> to post a message.</p>
     <?php endif; ?>
 
     <hr>
@@ -101,12 +101,12 @@ function getReplies($pdo, $parentId) {
                         <?php endif; ?>
                         
                         <?php if (isset($_SESSION['user_id']) && $post['user_id'] == $_SESSION['user_id']): ?>
-                            | <a href="delete.php?id=<?= $post['id'] ?>" class="delete-btn">Delete</a>
+                            | <a href="/src/posts/actions.php?action=delete&id=<?= $post['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
                         <?php endif; ?>
                     </div>
 
                     <div id="reply-form-<?= $post['id'] ?>" class="reply-form" style="display: none;">
-                        <form action="post.php" method="POST">
+                        <form action="/src/posts/actions.php?action=post" method="POST">
                             <input type="hidden" name="parent_id" value="<?= $post['id'] ?>">
                             <textarea name="content" placeholder="Write a reply..." required></textarea>
                             <button type="submit">Send Reply</button>
@@ -120,7 +120,7 @@ function getReplies($pdo, $parentId) {
                             <?= htmlspecialchars($reply['content']) ?>
                             <div class="meta">Posted on: <?= $reply['time_posted'] ?></div>
                             <?php if (isset($_SESSION['user_id']) && $reply['user_id'] == $_SESSION['user_id']): ?>
-                                <a href="delete.php?id=<?= $reply['id'] ?>" class="delete-btn">Delete</a>
+                                <a href="/src/posts/actions.php?action=delete&id=<?= $reply['id'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this reply?')">Delete</a>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
