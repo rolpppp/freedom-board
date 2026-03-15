@@ -144,8 +144,10 @@ function getReplies($pdo, $parentId) {
             <a href="board.php?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>">Next »</a>
         <?php endif; ?>
     </div>
-
+    
+    
     <script>
+        // this is to fetch the latest max ID from the DB every 5 seconds
         const initialMaxId = <?= $pdo->query("SELECT MAX(id) FROM posts")->fetchColumn() ?? 0 ?>;
         setInterval(() => {
             fetch('/src/posts/poll.php')
