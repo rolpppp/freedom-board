@@ -1,14 +1,14 @@
 <?php
 
 // this file is responsible for managing and connecting the mysql database to this project
-// additionally, a '.env' file is utilized to hide sensitive data
+// reads from system environment variables (Railway) with fallback to local .env file
 
-$env = parse_ini_file(__DIR__ . '/../.env');
+$env = file_exists(__DIR__ . '/../.env') ? parse_ini_file(__DIR__ . '/../.env') : [];
 
-$host     = $env['DB_HOST'];
-$db_name  = $env['DB_NAME'];
-$username = $env['DB_USER'];
-$password = $env['DB_PASS'];
+$host     = getenv('DB_HOST')     ?: ($env['DB_HOST']     ?? '');
+$db_name  = getenv('DB_NAME')     ?: ($env['DB_NAME']     ?? '');
+$username = getenv('DB_USER')     ?: ($env['DB_USER']     ?? '');
+$password = getenv('DB_PASS')     ?: ($env['DB_PASS']     ?? '');
 
 try{
     // using PDO or PHP Data Objects
