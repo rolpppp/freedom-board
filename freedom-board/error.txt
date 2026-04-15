@@ -1,0 +1,219 @@
+Internal Server Error
+
+Copy as Markdown
+ErrorException
+app\Http\Controllers\PostController.php:39
+Undefined array key "parent_id"
+
+LARAVEL
+13.4.0
+PHP
+8.5.1
+UNHANDLED
+CODE 0
+500
+POST
+http://127.0.0.1:8000/posts
+
+Exception trace
+Illuminate\Foundation\Bootstrap\HandleExceptions->{closure:Illuminate\Foundation\Bootstrap\HandleExceptions::forwardsTo():257}(integer, string, string, integer)
+app\Http\Controllers\PostController.php:39
+
+34        $validated = $request->validate([
+35            'content' => 'required|string|max:2000',
+36            'parent_id' => 'nullable|exists:posts,id',
+37        ]);
+38        $post = $request->user()->posts()->create($validated);
+39        return back()->with('success', $validated['parent_id'] ? 'Reply posted!' : 'Post success');
+40    }
+41
+42    // remove specific post from db
+43    public function remove(Post $post){
+44        // TODO: still has to set up Policy for this Gate
+45        Gate::authorize('delete', $post);
+46        // delete post and its replies
+47        $post->replies()->delete();
+48        $post->delete();
+49        return back()->with('success', 'Post deleted successfully');
+50    }
+51
+49 vendor frames
+
+App\Http\Controllers\PostController->store(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php:46
+Illuminate\Routing\ControllerDispatcher->dispatch(object(Illuminate\Routing\Route), object(App\Http\Controllers\PostController), string)
+vendor\laravel\framework\src\Illuminate\Routing\Route.php:269
+Illuminate\Routing\Route->runController()
+vendor\laravel\framework\src\Illuminate\Routing\Route.php:215
+Illuminate\Routing\Route->run()
+vendor\laravel\framework\src\Illuminate\Routing\Router.php:822
+Illuminate\Routing\Router->{closure:Illuminate\Routing\Router::runRouteWithinStack():821}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+Illuminate\Pipeline\Pipeline->{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php:52
+Illuminate\Routing\Middleware\SubstituteBindings->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Auth\Middleware\Authenticate.php:63
+Illuminate\Auth\Middleware\Authenticate->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestForgery.php:104
+Illuminate\Foundation\Http\Middleware\PreventRequestForgery->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php:48
+Illuminate\View\Middleware\ShareErrorsFromSession->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:120
+Illuminate\Session\Middleware\StartSession->handleStatefulRequest(object(Illuminate\Http\Request), object(Illuminate\Session\Store), object(Closure))
+vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:63
+Illuminate\Session\Middleware\StartSession->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php:36
+Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Cookie\Middleware\EncryptCookies.php:74
+Illuminate\Cookie\Middleware\EncryptCookies->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:137
+Illuminate\Pipeline\Pipeline->then(object(Closure))
+vendor\laravel\framework\src\Illuminate\Routing\Router.php:821
+Illuminate\Routing\Router->runRouteWithinStack(object(Illuminate\Routing\Route), object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Routing\Router.php:800
+Illuminate\Routing\Router->runRoute(object(Illuminate\Http\Request), object(Illuminate\Routing\Route))
+vendor\laravel\framework\src\Illuminate\Routing\Router.php:764
+Illuminate\Routing\Router->dispatchToRoute(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Routing\Router.php:753
+Illuminate\Routing\Router->dispatch(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:200
+Illuminate\Foundation\Http\Kernel->{closure:Illuminate\Foundation\Http\Kernel::dispatchToRouter():197}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+Illuminate\Pipeline\Pipeline->{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php:21
+Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php:31
+Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php:21
+Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php:51
+Illuminate\Foundation\Http\Middleware\TrimStrings->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php:27
+Illuminate\Http\Middleware\ValidatePostSize->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php:109
+Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php:61
+Illuminate\Http\Middleware\HandleCors->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php:58
+Illuminate\Http\Middleware\TrustProxies->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php:22
+Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php:28
+Illuminate\Http\Middleware\ValidatePathEncoding->handle(object(Illuminate\Http\Request), object(Closure))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+Illuminate\Pipeline\Pipeline->{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:137
+Illuminate\Pipeline\Pipeline->then(object(Closure))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:175
+Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:144
+Illuminate\Foundation\Http\Kernel->handle(object(Illuminate\Http\Request))
+vendor\laravel\framework\src\Illuminate\Foundation\Application.php:1220
+Illuminate\Foundation\Application->handleRequest(object(Illuminate\Http\Request))
+public\index.php:20
+
+15
+16// Bootstrap Laravel and handle the request...
+17/** @var Application $app */
+18$app = require_once __DIR__.'/../bootstrap/app.php';
+19
+20$app->handleRequest(Request::capture());
+21
+1 vendor frame
+
+Entrypoint
+vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php:23
+Queries
+1-3 of 3
+mysql
+select * from `sessions` where `id` = 'eiwRFZuOMYPsJemCPOKY7Aeb8vEFEdbMRSAFVnMv' limit 1
+2.14ms
+mysql
+select * from `users` where `id` = 1 limit 1
+0.49ms
+mysql
+insert into `posts` (`content`, `user_id`, `updated_at`, `created_at`) values ('hi', 1, '2026-04-15 12:42:46', '2026-04-15 12:42:46')
+5.11ms
+Headers
+host
+127.0.0.1:8000
+connection
+keep-alive
+content-length
+58
+cache-control
+max-age=0
+sec-ch-ua
+"Chromium";v="146", "Not-A.Brand";v="24", "Microsoft Edge";v="146"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+origin
+http://127.0.0.1:8000
+content-type
+application/x-www-form-urlencoded
+upgrade-insecure-requests
+1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+sec-fetch-site
+same-origin
+sec-fetch-mode
+navigate
+sec-fetch-user
+?1
+sec-fetch-dest
+document
+referer
+http://127.0.0.1:8000/posts
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9
+cookie
+_xsrf=2|d43fb245|60022037952723c0030db0598a7b516d|1775284177; XSRF-TOKEN=eyJpdiI6Iml5eVhYSWd1V3Y2bTZ1YUs1ZDVLZkE9PSIsInZhbHVlIjoiUzJ5NWJnT2JQcUkveUd4aGVuUnRxMTdpUGd3N2V3eGFETnpEcC9EUGlLV1BYNEowck9nVWJWQjkwRStEak8vdmYzcnFzZjVuS1YzSGRIelJEZkszSmRSdTNKNFdjZ01rOTQrRjYrZVFKMHZMK3RFUjRsTFNmYmxvSDNLeXdwNzAiLCJtYWMiOiIxZjhhNDg1M2Q0OGVlZmRkZWU1ZjJmNTMyY2I4OWU5NWNmYjAzM2E2NzU2OThkYjYxMzc2MTk3MTg4OWUwMjYyIiwidGFnIjoiIn0%3D; laravel-session=eyJpdiI6Inc3d1ZRakVuL20rZGhIRkw3OXdNY3c9PSIsInZhbHVlIjoiSit5enNqYSt2dDduRmkyZUFab3FuQUJmTW9VV09nWm14eVFEVlBRODhZcTdtTm5TYndtTEpXYmNaRzZ1cDc0dDJpcHpDSkV6Y0YwdGxReDVBUU9KR3cxT2J5ZjNFdE1yaUJTYWtTeWRJWExHRGdYakNwdFcyT2NzZ3NWTUdWb3UiLCJtYWMiOiIxYzY4MzMxY2QyMjVlY2E5ZjdlMmE4YTUzYzI0ZjUyYjY5ZmVkOWM2ZjI4MzBmZmY2MTU2ZDI2ZGViNDE4NzBkIiwidGFnIjoiIn0%3D
+Body
+{
+    "_token": "mKhWysDOVK3b0XXaB3TW60y0fMDT5Dt2cwdtGaXz",
+    "content": "hi"
+}
+Routing
+controller
+App\Http\Controllers\PostController@store
+route name
+posts.store
+middleware
+web, auth
+Routing parameters
+// No routing parameters
