@@ -6,43 +6,46 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-        // only fetch posts with no parent id (meaning, main post)
-        $posts = Post::with(['user', 'replies.user'])
-            ->whereNull('parent_id')
-            ->latest()
-            ->paginate(5);
-
-        return view('board.index', compact('posts'));
+    public function index(Request $request){
+        $search = $request->input('search');
+        $query = Post::with(['user', 'replies.user'])
+            ->whereNull('parent_id');
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('content', 'like', "%$search%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('username', 'like', "%$search%") ;
+                  });
+            });
+        }
+        $posts = $query->latest()->paginate(5)->withQueryString();
+        return view('board.index', compact('posts', 'search'));
     }
 
     // store a newly created post or reply
-    public function store(){
+
+    public function store(Request $request){
         $validated = $request->validate([
             'content' => 'required|string|max:2000',
             'parent_id' => 'nullable|exists:posts,id',
         ]);
-
-        // create a post to attach to a logged-in user
-        $request->user()->post()->create($validated);
-
-        return back()->with('success', 'Post success');
+        $post = $request->user()->posts()->create($validated);
+        return back()->with('success', (isset($validated['parent_id']) && $validated['parent_id']) ? 'Reply posted!' : 'Post success');
     }
 
     // remove specific post from db
-    public function remove(){
-
+    public function remove(Post $post){
         // TODO: still has to set up Policy for this Gate
         Gate::authorize('delete', $post);
-
-        // delete post
+        // delete post and its replies
+        $post->replies()->delete();
         $post->delete();
-
         return back()->with('success', 'Post deleted successfully');
     }
 
