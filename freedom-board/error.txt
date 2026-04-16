@@ -1,0 +1,99 @@
+Symfony\Component\ErrorHandler\Error\FatalError
+app\Models\User.php:15
+Namespace declaration statement has to be the very first statement or after any declare call in the script
+
+LARAVEL
+13.4.0
+PHP
+8.5.1
+UNHANDLED
+CODE 0
+500
+POST
+http://127.0.0.1:8000/register
+
+Exception trace
+App\Models\User
+app\Models\User.php:15
+
+10    {
+11        return 'username';
+12    }
+13<?php
+14
+15namespace App\Models;
+16
+17// use Illuminate\Contracts\Auth\MustVerifyEmail;
+18use Database\Factories\UserFactory;
+19use Illuminate\Database\Eloquent\Relations\HasMany;
+20use Illuminate\Database\Eloquent\Attributes\Fillable;
+21use Illuminate\Database\Eloquent\Attributes\Hidden;
+22use Illuminate\Database\Eloquent\Factories\HasFactory;
+23use Illuminate\Foundation\Auth\User as Authenticatable;
+24use Illuminate\Notifications\Notifiable;
+25
+26
+27
+Queries
+1-2 of 2
+mysql
+select * from `sessions` where `id` = 'MB5mBLVq4mxQwAy0QyrpDvluE3B79BGuXL9xGMOf' limit 1
+1.99ms
+mysql
+select count(*) as aggregate from `users` where `username` = 'ChrysaLink'
+2.34ms
+Headers
+host
+127.0.0.1:8000
+connection
+keep-alive
+content-length
+118
+cache-control
+max-age=0
+sec-ch-ua
+"Microsoft Edge";v="147", "Not.A/Brand";v="8", "Chromium";v="147"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+origin
+http://127.0.0.1:8000
+content-type
+application/x-www-form-urlencoded
+upgrade-insecure-requests
+1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+sec-fetch-site
+same-origin
+sec-fetch-mode
+navigate
+sec-fetch-user
+?1
+sec-fetch-dest
+document
+referer
+http://127.0.0.1:8000/register
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9
+cookie
+_xsrf=2|d43fb245|60022037952723c0030db0598a7b516d|1775284177; XSRF-TOKEN=eyJpdiI6IklIdnlCU2MvZERMdXI0eFFKN3YrVUE9PSIsInZhbHVlIjoia2ZoZjdQLzljMU5GdncrMmsyOXcxTWo5OW9BeUFBQWVRR3Zqb3RvSnZ2L25nNHNmZlZ4bkc2RlVmNXBPZFhKejAyYVNWUW1ZcU93MmNwUTFVMlZIYUptQlVSMnFsbVhGdk8xb1BDZDdia2cxUjFlSlRDaGlsK2I5OGJZQmpVMEwiLCJtYWMiOiJjZmU0ODIxYmFjNTZmNmU3NGYyYjQxYWQyMDhlODhhYzRkODc4YmQyNzliNTNiYWRlOWFhMzI2OGNkNmE5MzZlIiwidGFnIjoiIn0%3D; laravel-session=eyJpdiI6IjM1QnVDblZaWEcvK1RJTjRqK2J0eFE9PSIsInZhbHVlIjoiNk85QUkyS21taEVXanoxRXNpS1ZzcTJVVXpyaXRGUkpMUEJwN1lUeHF4ZE8veWdjUjdwN0lTcjhSYWIxcHZLam5WcTA1RkRuaFFvcVVzeTdUYUpKRktnYm9jc3VkZ3lGdmRETytUdURHbEZoTENFUlYwOGVoY09mUHJ0RmxLVzIiLCJtYWMiOiI1NGQ0ZWFjZTBiNDQ2MzkzZDY5NDRlMjZkNmMyNjRjMzBkMzlkYTQwOTk3OWY3YmJiNjU5ZjhhM2UyZjMwOGM4IiwidGFnIjoiIn0%3D
+Body
+{
+    "_token": "mFEPTPOl0pBblFFS24KUD77x47WOAKlq9esNyZkF",
+    "username": "ChrysaLink",
+    "password": "123456789",
+    "password_confirmation": "123456789"
+}
+Routing
+controller
+App\Http\Controllers\AuthController@register
+middleware
+web
+Routing parameters
+// No routing parameters

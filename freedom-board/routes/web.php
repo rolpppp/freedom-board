@@ -1,8 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+// Authentication routes
+Route::get('/login', [ProfileController::class, 'showLogin'])->name('login');
+Route::post('/login', [ProfileController::class, 'login']);
+Route::get('/register', [ProfileController::class, 'showRegister'])->name('register');
+Route::post('/register', [ProfileController::class, 'register']);
+Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
 
 // Redirect root to the board
 Route::get('/', function () {
